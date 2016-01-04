@@ -12,7 +12,7 @@
  * @author Mykola Chomenko <mykola.chomenko@dipcom.cz>
  */
 
-namespace DIP\Roles\Entits;
+namespace DIPcom\UserManager\Entits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;

@@ -1,6 +1,6 @@
 <?php
 
-namespace DIP\UserManager\Entits;
+namespace DIPcom\UserManager\Entits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;

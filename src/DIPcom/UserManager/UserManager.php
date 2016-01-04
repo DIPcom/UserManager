@@ -1,12 +1,12 @@
 <?php
 
-namespace DIPcom;
+namespace DIPcom\UserManager;
 
 use Nette;
 use Nette\Security\Passwords;
 use DIPcom\UserManager\Entits\Users;
 
-class UserManager extends Nette\Object implements Nette\Security\IAuthenticator{
+class UserManager extends BaseModel implements Nette\Security\IAuthenticator{
     
         /**
          *

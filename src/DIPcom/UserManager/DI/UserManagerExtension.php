@@ -26,13 +26,17 @@ class UserManagerExtension extends CompilerExtension{
         
         $builder = $this->getContainerBuilder();
         
+        $builder->addDefinition($this->prefix('maping'))
+		->setClass('DIPcom\UserManager\Maping')
+                ->setInject(false);
+        
         
         $builder->addDefinition($this->prefix('roles'))
 		->setClass('DIPcom\UserManager\Roles');
         
         
         $builder->addDefinition($this->prefix('manager'))
-		->setClass('DIPcom\UserManager');
+		->setClass('DIPcom\UserManager\UserManager');
         
         
     }
@@ -46,7 +50,7 @@ class UserManagerExtension extends CompilerExtension{
         $reader = $builder->getDefinition('annotations.reader');
         
         $builder->getDefinition('doctrine.default.metadataDriver')
-                ->addSetup('DIPcms\UserManager\Maping::addDoctrineMaping($service, ?,?,?)', array($this->prefix('@maping'), $cache, $reader));
+                ->addSetup('DIPcom\UserManager\Maping::addDoctrineMaping($service, ?,?,?)', array($this->prefix('@maping'), $cache, $reader));
        
         
     }

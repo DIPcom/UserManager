@@ -4,7 +4,7 @@ namespace DIPcom\UserManager;
 use Nette;
 use DIPcom\UserManager\Entits\UserRoles;
 
-class Roles extends Nette\Object{
+class Roles extends BaseModel{
     
     /**
      *

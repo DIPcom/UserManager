@@ -3,7 +3,7 @@
 /**
  * @author Mykola Chomenko <mykola.chomenko@dipcom.cz>
  */
-namespace DIPcms\UserManager;
+namespace DIPcom\UserManager;
 
 use Nette;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
@@ -31,7 +31,7 @@ class Maping extends Nette\Object{
      * @param \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain $service
      * @param \DIP\FileManager\AddMaping $maping
      */
-    public static function addDoctrineMaping(MappingDriverChain $service, AddMaping $maping, Cache $cache,CachedReader $reader){
+    public static function addDoctrineMaping(MappingDriverChain $service, Maping $maping, Cache $cache,CachedReader $reader){
        
         $nestedDriver = new AnnotationDriver(
                 array($maping->maping_doctrine['namespace'] => $maping->maping_doctrine['directory']), 
