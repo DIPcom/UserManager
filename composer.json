@@ -1,0 +1,33 @@
+{
+	"name": "dipcom/user-manager",
+	"description": "",
+	"homepage": "http://dipcom.cz",
+	"type": "library",
+	"license": ["MIT"],
+	"authors": [
+		{
+			"name": "Mykola Chomenko",
+			"homepage": "http://dipcom.cz",
+                        "email": "mykola.chomenko@dipcom.cz"
+		}
+	],
+	
+	"require": {
+		"nette/di": "~2.2",
+                "latte/latte": "~2.2",
+                "kdyby/doctrine": "~3.0.0"
+	},
+	"require-dev": {
+		"nette/tester": "@dev"
+	},
+	"autoload": {
+		"psr-0": {
+			"DIPcms\\UserManager\\": "src/"
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0-dev"
+		}
+	}
+}
