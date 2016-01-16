@@ -44,7 +44,7 @@ class Users extends BaseEntity{
     
     
     /**
-     * @ORM\ManyToOne(targetEntity="\DIP\Roles\Entits\UserRoles")
+     * @ORM\ManyToOne(targetEntity="UserRoles")
      * @ORM\JoinColumn(name="user_roles_id", referencedColumnName="id")
      * @var \DIP\UserManager\Entits\UserRoles
      **/
@@ -67,6 +67,12 @@ class Users extends BaseEntity{
      * @ORM\Column(type="datetime", nullable=true)
      */
     public $last_activity_date;
+    
+    
+    /**
+     * @ORM\Column(type="text", length=10000, nullable=true)
+     */
+    public $img_base64;
     
     
 

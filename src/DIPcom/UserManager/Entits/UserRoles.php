@@ -40,6 +40,27 @@ class UserRoles extends BaseEntity{
      * @ORM\Column(type="integer", nullable=true )
      */
     public $parent_role;
+   
+    
+    /**
+     * @ORM\Column(type="string", length=1000, nullable=true)
+     */
+    public $access;
+    
+    
+    /**
+     * @ORM\Column(type="string", length=1000, nullable=true)
+     */
+    public $access_ban;
+    
+    
+    /**
+     * 
+     * @return array
+     */
+    public function toArray(){
+        return array("name"=>$this->name, "description"=> $this->description, "parent_role"=>$this->parent_role);
+    }
     
     
 }

@@ -5,6 +5,9 @@ namespace DIPcom\UserManager;
 use Nette;
 use Nette\Security\Passwords;
 use DIPcom\UserManager\Entits\Users;
+use Nette\Utils\Image;
+use Nette\Http\FileUpload;
+
 
 class UserManager extends BaseModel implements Nette\Security\IAuthenticator{
     
@@ -55,16 +58,48 @@ class UserManager extends BaseModel implements Nette\Security\IAuthenticator{
             $password = $login_data[1];
             
             $user = $this->entit->findOneBy(array('email'=>$email));
-            
+
             if(!empty($user) && Passwords::verify($password, $user->password)){
                 $user->last_log_date = new \DateTime('NOW');
                 $this->em->flush();
                 
-                return new Nette\Security\Identity($user->id, $user->role->name, $user);
+                $user_session = (array)$user;
+                $user_session['role'] =  $user->role->toArray();
+                end($user_session);
+                unset($user_session[key($user_session)]);
+                unset($user_session['password']);
+                unset($user_session['img_base64']);
+
+                return new Nette\Security\Identity($user->id, $user->role->name, (array)$user_session);
             }
             
-            return false;
+            throw new \Nette\Security\AuthenticationException("Login filed");
 	}
+        
+        
+        
+        /**
+         * 
+         * @param \Nette\Http\FileUpload $file
+         * @return string
+         */
+        private function getImageBase64(\Nette\Http\FileUpload $file){
+            $type = $file->getContentType();
+            $img = Image::fromFile($file);
+            $img->resize(100, 100, Image::EXACT);
+            $img_string = "";
+            switch ($type){
+                case 'image/png': $img_string = $img->toString(Image::PNG);
+                    break;
+                case 'image/jpeg': $img_string = $img->toString(Image::JPEG);
+                    break;
+                case 'image/gif': $img_string = $img->toString(Image::GIF);
+                    break;
+            }
+            return 'data:'.$type.';base64,'.base64_encode($img_string);
+            
+        }
+        
         
         
         
@@ -77,7 +112,7 @@ class UserManager extends BaseModel implements Nette\Security\IAuthenticator{
          * @throws \Exception
          * @return \DIP\Database\Users
          */
-        public function createAccount($username, $email, $password, $role_id){
+        public function createAccount($username, $email, $password, $role_id, FileUpload $file = null){
             
            
             $role = $this->role->getRole($role_id);
@@ -88,31 +123,49 @@ class UserManager extends BaseModel implements Nette\Security\IAuthenticator{
             $account->password = Passwords::hash($password);
             $account->role = $role;
             
+            if($file){
+                $account->img_base64 = $this->getImageBase64($file);
+            }
+            
             $this->em->persist($account);
             $this->em->flush();
             return $account;
         }
         
-        public function updateUser($user_id, array $values){
+        
+        
+        /**
+         * 
+         * @param integer $user_id
+         * @return string
+         */
+        public function getUserImgBase64($user_id){
+            $user = $this->entit->findOneBy(array('id'=>$user_id));
+           
+            if($user){
+                return $user->img_base64;
+            }
+            return null;
+        }
+        
+        
+        
+        /**
+         * 
+         * @param integer $user_id
+         * @param array $values
+         */
+        public function updateUser($user_id, $name = null, $email = null, $password = null, $role = null, \Nette\Http\FileUpload $file = null){
             
             $user = $this->getUser($user_id);
             
-            foreach($values as $i => $v){
-                
-                if(property_exists($user, $i)){
-                    
-                    if($i == 'password'){
-                        $v = Passwords::hash($v);
-                    }
-                    
-                    if($i == 'role'){
-                        $v = $this->role->getRole($v);
-                    }
-                    
-                    $user->$i = $v;
-                }
-            }
-
+            if($name){ $user->name = $name;}
+            if($email){ $user->email = $email;}
+            if($password){ $user->password = Passwords::hash($password);}
+            if($role){ $user->role = $this->role->getRole($role); }
+            if($file){ $user->img_base64 = $this->getImageBase64($file); }
+            
+            
             $this->em->persist($user);
             $this->em->flush();
             
@@ -181,6 +234,16 @@ class UserManager extends BaseModel implements Nette\Security\IAuthenticator{
          */
         public function getUsers(){
             return $this->entit->findAll();
+        }
+        
+        
+        
+        /**
+         * @parma string $email
+         * @return \DIPcom\UserManager\Entits\Users
+         */
+        public function getUserByEmail($email){
+            return $this->entit->findOneBy(array('email'=>$email));
         }
         
         
