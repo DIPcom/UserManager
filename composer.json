@@ -22,7 +22,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"DIPcom\\UserManager\\": "src/"
+			"dipcom\\user-manager\\": "src/"
 		}
 	},
 	"extra": {
