@@ -25,6 +25,69 @@ class Roles extends BaseModel{
     }
     
     
+   /**
+    * 
+    * @param integer $id
+    */
+    public function removeRole($id){
+        if($id !== 1){
+          $role = $this->getRole($id);
+          if($role){
+              $this->em->remove($role);
+              $this->em->flush();
+          }
+        }
+    }
+    
+    
+    
+    
+    /**
+     * 
+     * @param string $name
+     * @param string $access
+     * @param string $access_ban
+     * @param string $description
+     * @return UserRoles
+     */
+    public function addRole($name, $access, $access_ban, $description = null){
+        $role = new \DIPcom\UserManager\Entits\UserRoles();
+        $role->name = $name;
+        $role->access = $access;
+        $role->access_ban = $access_ban;
+        $role->description = $description;
+        
+        $this->em->persist($role);
+        $this->em->flush();
+        return $role;
+    }
+    
+    
+    
+    
+    /**
+     * @param integer $role_id
+     * @param string $name
+     * @param string $access
+     * @param string $access_ban
+     * @param string $description
+     * @return UserRoles
+     */
+    public function editRole($role_id, $name, $access, $access_ban, $description = null){
+        $role = $this->getRole($role_id);
+        $role->name = $name;
+        $role->access = $access;
+        $role->access_ban = $access_ban;
+        $role->description = $description;
+        
+        $this->em->persist($role);
+        $this->em->flush();
+        return $role;
+    }
+    
+    
+    
+    
     /**
      * 
      * @param integer $id
@@ -51,9 +114,9 @@ class Roles extends BaseModel{
         }else{
             $is_ = explode(':',$presenter);
         }    
-        
-     
 
+
+        
         $search = array();
         $return = true;
         if(!$user_rols->access_ban && $user_rols->access){
@@ -64,8 +127,8 @@ class Roles extends BaseModel{
         }
         
         if($search){
+            $search = preg_replace("/[\n\r\s+]/","",$search);
             $a = explode(',',$search);
-
             foreach($a as $v){
                 $v = explode(':',$v);
                 $count = 0;
